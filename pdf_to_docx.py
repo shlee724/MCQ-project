@@ -34,15 +34,24 @@ def pdf_to_word(pdf_file, word_file):
                             mode = 'P'
                         if xObject[obj]['/Filter'] == '/FlateDecode':
                             img = Image.frombytes(mode, size, data)
+                            img_folder = os.path.join(img_dir, f'page_{page_num}_image_')
+                            if not os.path.exists(img_folder):
+                                os.makedirs(img_folder)                            
                             img_path = os.path.join(img_dir, f'page_{page_num}_image_{obj}.png')
                             img.save(img_path)
                             doc.add_picture(img_path)
                         elif xObject[obj]['/Filter'] == '/DCTDecode':
+                            img_folder = os.path.join(img_dir, f'page_{page_num}_image_')
                             img_path = os.path.join(img_dir, f'page_{page_num}_image_{obj}.jpg')
+                            if not os.path.exists(img_folder):
+                                os.makedirs(img_folder)
                             with open(img_path, 'wb') as img_file:
                                 img_file.write(data)
                             doc.add_picture(img_path)
                         elif xObject[obj]['/Filter'] == '/JPXDecode':
+                            img_folder = os.path.join(img_dir, f'page_{page_num}_image_')
+                            if not os.path.exists(img_folder):
+                                os.makedirs(img_folder)
                             img_path = os.path.join(img_dir, f'page_{page_num}_image_{obj}.jp2')
                             with open(img_path, 'wb') as img_file:
                                 img_file.write(data)
