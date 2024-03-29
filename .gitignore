@@ -1,3 +1,5 @@
 output.pptx
 example.docx
 /images
+/myenv
+get-pip.py
