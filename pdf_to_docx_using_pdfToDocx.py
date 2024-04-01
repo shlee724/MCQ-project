@@ -1,3 +1,6 @@
+# 성능이 완전 개판이라 못쓸듯
+
+
 from pdf2docx import Converter
 
 # PDF 파일 경로

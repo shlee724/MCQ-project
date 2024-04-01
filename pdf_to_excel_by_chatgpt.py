@@ -1,3 +1,7 @@
+#엑셀로 텍스트는 잘 변환되는데, 이미지가 셀에 들어가지 않고 셀 밖에서 노는 문제때문에 이미지의 포지션 이슈가 생김
+
+
+
 import fitz  # PyMuPDF
 import pandas as pd
 from openpyxl import Workbook

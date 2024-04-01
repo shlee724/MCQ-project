@@ -1,3 +1,6 @@
+#이게 성능은 가장 좋음. 구독제라서 돈들어서 안좋을 뿐
+
+
 from spire.pdf.common import *
 from spire.pdf import *
 

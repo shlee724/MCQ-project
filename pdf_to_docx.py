@@ -1,3 +1,6 @@
+#Chat GPT 3.5를 열심히 갈궈서 만들어놓은 결과물인데, 결과적으로 텍스트와 이미지가 따로노는 문제때문에 실패
+
+
 import PyPDF2
 from docx import Document
 from PIL import Image

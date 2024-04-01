@@ -1,3 +1,6 @@
+#이건 일단 미완성
+
+
 import os  
 import pdfplumber  
 import pandas as pd  

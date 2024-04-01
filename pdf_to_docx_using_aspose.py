@@ -1,8 +1,11 @@
+#일단 유료인데다 변환도 조금은 이상하게 되는데 굳이...?
+
+
 import aspose.words as aw
 
 # Aspose.Words 초기화
-license = aw.License()
-license.set_license("Aspose.Words.lic")
+#license = aw.License()
+#license.set_license("Aspose.Words.lic")
 
 # PDF 파일을 Word 파일로 변환
 def pdf_to_word(pdf_file, word_file):

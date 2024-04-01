@@ -1,3 +1,6 @@
+#이미지도 안 딸려오고 ppt의 한 슬라이드에 다 텍스트만 몰빵되어 그냥 망...
+
+
 import os
 from pptx import Presentation
 from PyPDF2 import PdfReader
