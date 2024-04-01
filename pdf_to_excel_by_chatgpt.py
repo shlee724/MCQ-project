@@ -1,24 +1,49 @@
-import pdfplumber
+import fitz  # PyMuPDF
 import pandas as pd
+from openpyxl import Workbook
+from openpyxl.drawing.image import Image
+from PIL import Image as PILImage
+import io
+import tempfile
 
-def convert_pdf_to_excel(pdf_path, excel_path):
-    # PDF 파일을 엽니다.
-    with pdfplumber.open(pdf_path) as pdf:
-        pages = pdf.pages
-        
-        # 엑셀 파일에 쓸 준비를 합니다. with 문을 사용합니다.
-        with pd.ExcelWriter(excel_path, engine='openpyxl') as writer:
-            for i, page in enumerate(pages):
-                # 페이지의 텍스트를 추출합니다.
-                text = page.extract_text()
-                if text:
-                    # 텍스트를 줄바꿈으로 분리하여 DataFrame으로 변환합니다.
-                    df = pd.DataFrame(text.split('\n'), columns=['Text'])
-                    # 데이터프레임을 엑셀 시트로 저장합니다. 각 페이지마다 별도의 시트에 저장됩니다.
-                    df.to_excel(writer, sheet_name=f'Page_{i + 1}', index=False)
+def pdf_to_excel(pdf_path, excel_path):
+    doc = fitz.open(pdf_path)
+    wb = Workbook()
+    ws = wb.active
 
-# 사용 예시
-pdf_path = 'your_pdf_file.pdf' # 변환할 PDF 파일 경로
-excel_path = 'output_excel_file.xlsx' # 저장할 Excel 파일 경로
+    for page_num, page in enumerate(doc):
+        # 페이지의 텍스트 블록과 이미지 블록을 추출합니다.
+        text_blocks = page.get_text("blocks")
+        image_blocks = page.get_images(full=True)
 
-convert_pdf_to_excel(pdf_path, excel_path)
+        # 이미지 블록의 xref를 추출하여 위치를 찾습니다.
+        image_xrefs = {xref[0] for xref in image_blocks}
+
+        # 모든 블록을 하나의 리스트로 병합합니다.
+        blocks = text_blocks + [(img[0], 0, 0, 0, 0, "image", img[0]) for img in image_blocks]
+
+        # 블록을 y 위치에 따라 정렬합니다.
+        blocks.sort(key=lambda block: block[1])
+
+        for block in blocks:
+            if block[5] == "image" and block[0] in image_xrefs:
+                # 이미지를 처리합니다.
+                for img in image_blocks:
+                    if img[0] == block[0]:
+                        image_bytes = doc.extract_image(img[0])['image']
+                        # 이미지를 임시 파일로 저장합니다.
+                        image_pil = PILImage.open(io.BytesIO(image_bytes))
+                        temp_img = tempfile.NamedTemporaryFile(delete=False, suffix='.png')
+                        image_pil.save(temp_img.name)
+                        img = Image(temp_img.name)
+                        ws.add_image(img, 'A' + str(ws.max_row + 1))  # 이미지 삽입
+            else:
+                # 텍스트를 셀에 추가합니다.
+                ws.append([block[4]])
+
+    wb.save(excel_path)
+
+pdf_path = 'your_pdf_file.pdf'  # PDF 파일 경로
+excel_path = 'output_excel_file.xlsx'  # Excel 파일 경로
+
+pdf_to_excel(pdf_path, excel_path)
