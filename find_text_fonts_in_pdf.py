@@ -15,11 +15,18 @@ def save_all_text_attributes_to_file(pdf_path, output_file_path):
                             text = span['text']
                             font = span['font']  # 폰트 이름
                             size = span['size']  # 폰트 크기
+
+                            print(text.__class__)
+                            print(font.__class__)
+                            print(size.__class__)
+
                             bold = 'Bold' in font or 'bold' in font.lower()  # 굵기
                             italic = 'Italic' in font or 'italic' in font.lower()  # 기울기
                             color = span['color']  # 텍스트 색상
                             underline = span['flags'] & 4 != 0  # 밑줄 여부
                             bbox = span['bbox']  # 텍스트 박스 좌표
+
+                            print(color.__class__)
 
                             # 파일에 정보 쓰기
                             f.write(f"Page {page_num+1}: '{text}'\n")
