@@ -12,5 +12,6 @@ Sample.pdf
 PdfToDocx.docx
 *.pdf
 *.png
+*.txt
 !exmaple.pdf
 !sample_resume.pdf
