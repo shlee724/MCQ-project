@@ -10,3 +10,5 @@ converted_word_file.docx
 output.docx
 Sample.pdf
 PdfToDocx.docx
+*.pdf
+!exmaple.pdf
