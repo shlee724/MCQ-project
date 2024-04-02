@@ -17,6 +17,7 @@ def modify_text_style(pdf_path, output_pdf_path, target_font, target_size, targe
                         color = span['color']
                         font = span['font']
                         size = span['size']
+                        text = span['text']
 
 
                         if font == target_font and size == target_size and color == target_color:
@@ -27,9 +28,9 @@ def modify_text_style(pdf_path, output_pdf_path, target_font, target_size, targe
                             page.apply_redactions()
                             
                             # 새로운 스타일로 텍스트 추가
-                            page.insert_text(rect.bl,  # 위치
-                                             span['text'],  # 텍스트
-                                             fontname="helv",  # 폰트 (helv는 Helvetica의 축약형)
+                            page.insert_text((rect.bl+rect.tl)/2,  # 위치
+                                             text,  # 텍스트
+                                             fontname='UntitledTTF',  # 폰트 (helv는 Helvetica의 축약형)
                                              fontsize=new_size,  # 새 폰트 사이즈
                                              color=new_color)  # 새 색상
     
