@@ -62,7 +62,7 @@ def modify_text_style(pdf_path, output_pdf_path, target_font, target_size, targe
 
                             pdf_path = 'your_pdf_file.pdf'
                             output_pdf_path = 'modified_pdf_file.pdf'
-                            position = (100, 100)  # 삽입 위치
+                            position = (rect.bl+rect.tl)/2  # 삽입 위치
                             insert_text_image(pdf_path, output_pdf_path, image_path, position)
     
     doc.save(output_pdf_path)  # 수정된 PDF 저장
