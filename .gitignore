@@ -11,4 +11,6 @@ output.docx
 Sample.pdf
 PdfToDocx.docx
 *.pdf
+*.png
 !exmaple.pdf
+!sample_resume.pdf
