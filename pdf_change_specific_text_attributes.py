@@ -44,23 +44,27 @@ def modify_text_style(pdf_path, output_pdf_path, target_font, target_size, targe
                         size = span['size']
                         text = span['text']
 
-                        if font == target_font and size == target_size and color == target_color:
+                        if font == target_font and (size == target_size or size == 11.25):  #정답선지이거나 오답선지이거나
                             print("true")
                             # 기존 텍스트 삭제
                             rect = fitz.Rect(span['bbox'])
                             page.add_redact_annot(rect)
                             page.apply_redactions()
                             
-                            # 사용 예
+                            # 커스텀 폰트 이용해 이미지 생성
                             font_path = "fonts/UntitledTTF.ttf"
                             font_size = 15
                             color = (0, 0, 0)  # 검은색
                             image_path = create_high_resolution_text_image(text, font_path, font_size, color)
 
-                            #pdf_path = 'your_pdf_file.pdf'
-                            #output_pdf_path = 'modified_pdf_file.pdf'
-                            position = (rect.bl*1.125 + rect.tl*12.375)/13.5 # 삽입 위치
-                            insert_text_image(page, image_path, position, doc)
+                            #정답 선지이면 포지션 재조정, 정답 선지가 아니면 기존의 포지션 유지
+                            if size == target_size and color == target_color:   #정답선지
+                                position = (rect.bl*1.125 + rect.tl*12.375)/13.5 # 삽입 위치
+                            else:                                               #오답선지
+                                position = rect.tl
+
+                            insert_text_image(page, image_path, position, doc)  #이미지화된 텍스트 삽입
+
     
     doc.save(output_pdf_path)  # 수정된 PDF 저장
 
