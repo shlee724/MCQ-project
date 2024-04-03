@@ -83,13 +83,13 @@ def modify_text_style(pdf_path, output_pdf_path, target_font, target_size, targe
                             
                             # 사용 예
                             font_path = "fonts/UntitledTTF.ttf"
-                            font_size = 16
+                            font_size = 15
                             color = (0, 0, 0)  # 검은색
                             image_path = create_high_resolution_text_image(text, font_path, font_size, color)
 
                             #pdf_path = 'your_pdf_file.pdf'
                             #output_pdf_path = 'modified_pdf_file.pdf'
-                            position = (rect.bl+rect.tl)/2  # 삽입 위치
+                            position = (rect.bl*1.125 + rect.tl*12.375)/13.5 # 삽입 위치
                             insert_text_image(page, image_path, position, doc)
     
     doc.save(output_pdf_path)  # 수정된 PDF 저장
