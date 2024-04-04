@@ -4,26 +4,28 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from PIL import Image, ImageDraw, ImageFont
 
-def create_high_resolution_text_image(text, font_path, font_size, color, image_num, dpi=(300, 300), padding=(10, 10)):
-    """텍스트를 고해상도 이미지로 변환합니다. 배경은 투명 처리합니다."""
-    scale_factor = dpi[0] / 96  # 일반적인 화면 DPI 대비 스케일 팩터
-    font_size_scaled = int(font_size * scale_factor)  # 폰트 사이즈 조정
+def create_high_resolution_text_image(text, font_path, font_size, color, image_num, dpi=(300, 300), padding=(1, 1)):
+    """텍스트를 고해상도 이미지로 변환하고, 배경을 투명하게 처리합니다."""
+    scale_factor = dpi[0] / 96  # DPI 기준에 따른 스케일 팩터
+    font_size_scaled = int(font_size * scale_factor)  # 스케일 팩터에 따라 폰트 사이즈 조정
     font = ImageFont.truetype(font_path, font_size_scaled)
     
-    # 텍스트 실제 크기 계산
+    # 텍스트의 크기 계산
     text_width, text_height = font.getsize(text)
-    image_size = (int(text_width + 2 * padding[0]), int(text_height + 2 * padding[1]))
     
-    image = Image.new('RGBA', image_size, (0, 0, 0, 0))  # 투명 배경 생성
+    # 이미지 크기에 텍스트 크기와 패딩을 고려하여 설정
+    image_size = (text_width + 2 * padding[0], text_height + 2 * padding[1])
+    
+    # RGBA 모드로 이미지 생성 (투명 배경)
+    image = Image.new('RGBA', image_size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
     
-    # 텍스트를 이미지 중앙에 위치시키기
-    text_position = (padding[0], padding[1])
-    draw.text(text_position, text, font=font, fill=color + (255,))  # RGBA로 색상 지정
+    # 텍스트를 이미지에 그림
+    draw.text(padding, text, font=font, fill=color + (255,))
     
-    # 저장할 이미지 파일 경로 지정
+    # 이미지 저장 경로 설정 및 저장
     image_path = f'high_res_text_image/img_{image_num}.png'
-    image.save(image_path, dpi=dpi)  # 이미지 저장
+    image.save(image_path, dpi=dpi)
     
     return image_path
 
