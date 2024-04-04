@@ -4,7 +4,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from PIL import Image, ImageDraw, ImageFont
 
-def create_high_resolution_text_image(text, font_path, font_size, color=(0, 0, 0), dpi=(300, 300)):
+def create_high_resolution_text_image(text, font_path, font_size, color, image_num, dpi=(300, 300)):
     """텍스트를 고해상도 이미지로 변환합니다. 배경은 투명 처리합니다."""
     scale_factor = dpi[0] / 96  # 일반적인 화면 DPI 대비 스케일 팩터
     font_size_scaled = int(font_size * scale_factor)  # 폰트 사이즈 조정
@@ -13,11 +13,13 @@ def create_high_resolution_text_image(text, font_path, font_size, color=(0, 0, 0
     
     # 이미지 크기 스케일 조정
     size_scaled = (int(size[0] * scale_factor), int(size[1] * scale_factor))
-    image = Image.new('RGBA', size_scaled, (255, 255, 255, 0))  # 투명 배경
+    image = Image.new('RGBA', size_scaled, (0, 0, 0, 0))  # 투명 배경
     draw = ImageDraw.Draw(image)
     # 텍스트 위치도 스케일에 맞게 조정
     draw.text((0, 0), text, font=font, fill=color + (255,))
     image_path = 'high_res_text_image.png'
+    image.save(image_path, dpi=dpi)
+    image_path = 'high_res_text_image/img_'+str(image_num)+'.png'
     image.save(image_path, dpi=dpi)
     return image_path
 
@@ -31,6 +33,7 @@ def insert_text_image(page, image_path, position, doc):
 
 def modify_text_style(pdf_path, output_pdf_path, target_font, target_size, target_color, new_size, new_color):
     doc = fitz.open(pdf_path)
+    image_num = 0
       
     for page in doc:
         text_instances = page.get_text("dict")['blocks']
@@ -55,7 +58,8 @@ def modify_text_style(pdf_path, output_pdf_path, target_font, target_size, targe
                             font_path = "fonts/UntitledTTF.ttf"
                             font_size = 15
                             color = (0, 0, 0)  # 검은색
-                            image_path = create_high_resolution_text_image(text, font_path, font_size, color)
+                            image_path = create_high_resolution_text_image(text, font_path, font_size, color, image_num)
+                            image_num += 1
 
                             #정답 선지이면 포지션 재조정, 정답 선지가 아니면 기존의 포지션 유지
                             if size == target_size and color == target_color:   #정답선지

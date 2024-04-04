@@ -12,6 +12,7 @@ Sample.pdf
 PdfToDocx.docx
 *.pdf
 *.png
+!high_res_text_image/img_0.png
 *.txt
 !exmaple.pdf
 !sample_resume.pdf
